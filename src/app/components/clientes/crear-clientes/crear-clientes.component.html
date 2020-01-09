@@ -1,10 +1,68 @@
-<div class="card bg-dark text-white">
+<div class="card">
     <div class="card-header">
         {{titulo}}
     </div>
     <div class="card-body">
-        <form [formGroup]="form" id="formNovedades">
+        <form [formGroup]="form" id="form">
+            <div class="row justify-content-start ui-fluid">
+                <div class="col-lg-6 col-md-12 col-sm-12 espacio">
+                    <span class="ui-float-label">
+                        <input formControlName="nombre" id="inputnombre" name="inputnombre" pInputText />
+                        <label for="inputnombre">Nombre</label>
+                        <div *ngIf="getNombre.invalid && (getNombre.dirty || getNombre.touched)"
+                        class="alert alert-danger">
+                          <div *ngIf="getNombre.hasError('required')">
+                           {{erroresDefs.nombre.required}}
+                          </div>
+                        </div>
+                    </span>
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 espacio">
+                    <span class="ui-float-label">
+                        <input formControlName="apellido" id="inputapellido" size="50" name="inputapellido" pInputText />
+                        <label>Apellido</label>
+                        <div *ngIf="getApellido.invalid && (getApellido.dirty || getApellido.touched)"
+                        class="alert alert-danger">
+                          <div *ngIf="getApellido.hasError('required')">
+                           {{erroresDefs.apellido.required}}
+                          </div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+            <div class="row justify-content-start ui-fluid">
 
+                <div class="col-lg-6 col-md-12 col-sm-12 espacio">
+                    <span class="ui-float-label">
+                    <input formControlName="email" size="50" id="inputemail" name="inputemail" pInputText />
+                    <label>Email</label>
+                    <div *ngIf="getEmail.invalid && (getEmail.dirty || getEmail.touched)"
+                    class="alert alert-danger">
+                      <div *ngIf="getEmail.hasError('email')">
+                       {{erroresDefs.email.email}}
+                      </div>
+                    </div>
+                </span>
+
+                </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 espacio">
+                    <span class="ui-float-label">
+                        <p-calendar formControlName="createAt" size="50" [monthNavigator]="true"  dateFormat="dd/mm/yy"
+                        [yearNavigator]="true" yearRange="1917:2050" 
+                      ></p-calendar>
+                        <label>Fecha creación</label>
+                      </span>
+                </div>
+            </div>
+            <div class="row ui-fluid">
+                <div class="col-12 align-right espacio">
+                    <button id="btnVolver" name="btnVolver" class="btn btn-warning" label="Cancelar" style="margin: 10px; width: auto;" type="button" pButton [routerLink]="['/clientes']">
+                    </button>
+                    <button id="btnGuardar" name="btnGuardar" class="btn btn-success" label="Guardar" style="margin: 10px; width: auto;" type="button" pButton (click)="almacenar()">
+                                </button>
+                </div>
+            </div>
         </form>
     </div>
 </div>
+<p-toast></p-toast>
