@@ -15,8 +15,8 @@ export const ERRORES_REGISTRAR_CLIENTE = {
 export const MENSAJES_GENERALES = {
     FORMULARIO_INVALIDO: 'Debe completar la información del formulario.',
     INFORMACION_DEPENDIENTE_INCOMPLETA: 'Verifique que haya guardado toda la información.',
-    GUARDADO_EXITOSO: 'Registro almacenado con éxito.',
-    ACTUALIZADO_EXITOSO: 'Registro actualizado con éxito.',
+    GUARDADO_EXITOSO: 'Registro almacenado.',
+    ACTUALIZADO_EXITOSO: 'Registro actualizado.',
     ELIMINADO_EXITOSO: 'Registro eliminado con éxito.',
     ERROR_PETICION: 'Ha ocurrido un error, comuníquese con el administrador'
 };

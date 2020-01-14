@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -18,6 +18,10 @@ import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/es-CO';
+
+registerLocaleData(localeFr, 'es-CO');
 
 @NgModule({
   declarations: [
@@ -42,7 +46,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
     MessagesModule,
     NgxSpinnerModule
   ],
-  providers: [MessageService],
+  providers: [MessageService, {provide: LOCALE_ID, useValue: 'es-CO' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

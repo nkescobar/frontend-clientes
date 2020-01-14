@@ -20,7 +20,7 @@ export class CrearClientesComponent implements OnInit {
   public erroresDefs = ERRORES_REGISTRAR_CLIENTE;
   public cliente: ClienteModel;
   public esModoEditar: boolean;
-
+  public errores: string[] = [];
   constructor(private fb: FormBuilder,
               private clientesService: ClientesService,
               private messageService: MessageService,
@@ -49,6 +49,7 @@ export class CrearClientesComponent implements OnInit {
     const createAt = this.cliente.createAt ?
     new Date(fecha.toString()) : null;
     this.getNombre.setValue(this.cliente.nombre);
+    console.log("TCL: CrearClientesComponent -> cargarDatosCliente -> this.getNombre", this.getNombre.value)
     this.getApellido.setValue(this.cliente.apellido);
     this.getEmail.setValue(this.cliente.email);
     this.getCreateAt.setValue(createAt);
@@ -74,6 +75,7 @@ export class CrearClientesComponent implements OnInit {
     if (this.form.valid) {
       if (this.esModoEditar) {
         const cliente = this.obtenerObjetoEditar();
+        this.titulo = 'Actualizar Cliente';
         this.actualizarCliente(cliente);
       } else {
         const cliente = this.obtenerObjetoAlmacenar();
@@ -90,7 +92,8 @@ export class CrearClientesComponent implements OnInit {
       next: (response) => {
           if (response) {
             console.log("TCL: CrearClientesComponent -> consultarCliente -> response", response)
-            this.cliente = response;
+            this.cliente = response.response;
+            console.log("TCL: CrearClientesComponent -> consultarCliente ->   this.cliente",   this.cliente)
             this.esModoEditar = true;
             this.cargarDatosCliente();
           }
@@ -107,12 +110,13 @@ export class CrearClientesComponent implements OnInit {
 
   private guardarCliente(cliente: ClienteModel) {
     this.loaderService.show();
+    this.errores = [];
     this.clientesService.crearCliente(cliente).subscribe({
       next: (response) => {
           if (response) {
             Swal.fire({
               icon: 'success',
-              title: MENSAJES_GENERALES.GUARDADO_EXITOSO,
+              title: MENSAJES_GENERALES.GUARDADO_EXITOSO + ' ' + response.mensaje ,
               showConfirmButton: false,
               timer: 1500
             });
@@ -121,6 +125,8 @@ export class CrearClientesComponent implements OnInit {
       },
       error: (err) => {
           console.log('err', err);
+          this.errores = err.error.errors as string[];
+          console.log("TCL: CrearClientesComponent -> guardarCliente -> this.errores", this.errores)
           this.messageService.add({severity: 'error', summary: 'Información', detail: MENSAJES_GENERALES.ERROR_PETICION});
       },
       complete: () => {
@@ -131,12 +137,13 @@ export class CrearClientesComponent implements OnInit {
 
   private actualizarCliente(cliente: ClienteModel) {
     this.loaderService.show();
+    this.errores = [];
     this.clientesService.actualizarCliente(cliente).subscribe({
       next: (response) => {
           if (response) {
             Swal.fire({
               icon: 'success',
-              title: MENSAJES_GENERALES.ACTUALIZADO_EXITOSO,
+              title: MENSAJES_GENERALES.ACTUALIZADO_EXITOSO + ' ' + response.mensaje,
               showConfirmButton: false,
               timer: 1500
             });
@@ -145,6 +152,7 @@ export class CrearClientesComponent implements OnInit {
       },
       error: (err) => {
           console.log('err', err);
+          this.errores = err.error.errors as string[];
           this.messageService.add({severity: 'error', summary: 'Información', detail: MENSAJES_GENERALES.ERROR_PETICION});
       },
       complete: () => {

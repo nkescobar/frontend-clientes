@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
 import { MENSAJES_GENERALES } from 'src/app/constants/validators';
+import { formatDate, DatePipe, registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/es-CO';
 
 @Component({
   selector: 'app-clientes',
@@ -32,6 +34,13 @@ export class ClientesComponent implements OnInit {
           if (response) {
             this.listaCientes = response;
             console.log("TCL: this.listaCientes", this.listaCientes)
+            this.listaCientes.map(cliente => {
+              cliente.nombre = cliente.nombre.toUpperCase();
+
+             //  let datePipe = new DatePipe('es-CO');
+              // cliente.createAt = datePipe.transform(cliente.createAt, 'EEEE dd, MMMM yyyy');
+              return cliente;
+            });
           }
       },
       error: (err) => {
@@ -65,12 +74,12 @@ export class ClientesComponent implements OnInit {
     this.clientesService.eliminarCliente(cliente.id).subscribe({
       next: (response) => {
         console.log("TCL: eliminar -> response", response)
-            Swal.fire(
+        Swal.fire(
               'Eliminado!',
                MENSAJES_GENERALES.ELIMINADO_EXITOSO,
               'success'
             );
-            this.cargarClientes();
+        this.cargarClientes();
       },
       error: (err) => {
           console.log('err', err);
