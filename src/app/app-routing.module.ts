@@ -8,6 +8,7 @@ import { CrearClientesComponent } from './components/clientes/crear-clientes/cre
 const routes: Routes = [ 
 {path: 'home', component: HomeComponent},
 {path: 'clientes', component: ClientesComponent},
+{path: 'clientes/page/:page', component: ClientesComponent},
 {path: 'clientes/form', component: CrearClientesComponent},
 {path: 'clientes/form/:id', component: CrearClientesComponent},
 {path: '', pathMatch: 'full', redirectTo: 'home'},

@@ -20,6 +20,7 @@ import { MessageService } from 'primeng/api';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/es-CO';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 
 registerLocaleData(localeFr, 'es-CO');
 
@@ -30,7 +31,8 @@ registerLocaleData(localeFr, 'es-CO');
     FooterComponent,
     ClientesComponent,
     HomeComponent,
-    CrearClientesComponent
+    CrearClientesComponent,
+    PaginatorComponent
   ],
   imports: [
     BrowserModule,

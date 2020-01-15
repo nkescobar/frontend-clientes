@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 import { MENSAJES_GENERALES } from 'src/app/constants/validators';
 import { formatDate, DatePipe, registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/es-CO';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-clientes',
@@ -16,13 +17,31 @@ import localeFr from '@angular/common/locales/es-CO';
 export class ClientesComponent implements OnInit {
 
   listaCientes: ClienteModel[] = [];
+  private page = 0;
+  private size =  4;
+  public paginador: any;
   constructor(private clientesService: ClientesService,
               private loaderService: NgxSpinnerService,
               private messageService: MessageService,
+              private activatedRoute: ActivatedRoute,
+              private route: Router
     ) { }
 
   ngOnInit() {
-    this.cargarClientes();
+   // this.cargarClientes();
+    // this.cargarClientesPaginado();
+    this.recuperarPageRuta();
+  }
+
+  private recuperarPageRuta() {
+    this.activatedRoute.params.subscribe(params => {
+    console.log("TCL: recuperarPageRuta -> params", params)
+    this.page = params.page;
+    if (!this.page) {
+        this.page = 0;
+      }
+    this.cargarClientesPaginado();
+    });
   }
 
   private cargarClientes(): void {
@@ -42,6 +61,27 @@ export class ClientesComponent implements OnInit {
               return cliente;
             });
           }
+      },
+      error: (err) => {
+          console.log('err', err);
+          this.messageService.add({severity: 'error', summary: 'Información', detail: MENSAJES_GENERALES.ERROR_PETICION});
+      },
+      complete: () => {
+        this.loaderService.hide();
+      }});
+  }
+
+  private cargarClientesPaginado(): void {
+    this.loaderService.show();
+    this.listaCientes = [];
+    console.log("TCL: this.page", this.page)
+
+    this.clientesService.getClientesPaginado(this.page, this.size)
+    .subscribe({
+      next: (response) => {
+           console.log("TCL: response", response)
+           this.listaCientes = response.content;
+           this.paginador = response;
       },
       error: (err) => {
           console.log('err', err);

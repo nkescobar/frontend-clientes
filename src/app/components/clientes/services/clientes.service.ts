@@ -4,7 +4,7 @@ import { CLIENTES } from '../clientes.json';
 import { Observable, of, throwError} from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ModeloRespuestaModel } from 'src/app/models/respuesta';
 import Swal from 'sweetalert2';
@@ -46,6 +46,27 @@ export class ClientesService {
     // return of(CLIENTES);
     return this.http.get<ClienteModel[]>(this.urlBase);
   }
+
+  getClientesPaginado(page: number , size: number): Observable<any> {
+    // return of(CLIENTES);
+    return this.http.get<any>(`${this.urlBase}/page/${page}/size/${size}`)
+      .pipe(
+        tap((response: any) => {
+          (response.content as ClienteModel[]).forEach(cliente => {
+            console.log("TCL: ClientesService -> constructor -> cliente", cliente);
+          });
+        }),
+        map((response: any) => {
+          (response.content as ClienteModel[]).map(cliente => {
+            cliente.nombre = cliente.nombre.toUpperCase();
+            return cliente;
+          });
+          return response;
+        }
+        )
+      );
+  }
+
 
   crearCliente(cliente: ClienteModel): Observable<ModeloRespuestaModel> {
     // return of(CLIENTES);
