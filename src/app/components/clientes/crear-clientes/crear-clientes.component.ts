@@ -166,6 +166,8 @@ export class CrearClientesComponent implements OnInit {
     cliente.nombre = this.getNombre.value;
     cliente.apellido = this.getApellido.value;
     cliente.email = this.getEmail.value;
+    const dateFormat = moment(this.getCreateAt.value).format('YYYY-MM-DD');
+    cliente.createAt = dateFormat;
     return cliente;
   }
 
@@ -175,6 +177,9 @@ export class CrearClientesComponent implements OnInit {
     cliente.nombre = this.getNombre.value;
     cliente.apellido = this.getApellido.value;
     cliente.email = this.getEmail.value;
+    const dateFormat = moment(this.getCreateAt.value).format('YYYY-MM-DD');
+    cliente.createAt = dateFormat;
+    console.log("TCL: CrearClientesComponent -> getgetCreateAt -> cliente.createAt", cliente.createAt)
     return cliente;
   }
 }
