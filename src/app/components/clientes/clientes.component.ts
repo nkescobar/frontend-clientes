@@ -5,9 +5,9 @@ import Swal from 'sweetalert2';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
 import { MENSAJES_GENERALES } from 'src/app/constants/validators';
-import { formatDate, DatePipe, registerLocaleData } from '@angular/common';
-import localeFr from '@angular/common/locales/es-CO';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+import { ModalService } from './services/modal.service';
 
 @Component({
   selector: 'app-clientes',
@@ -20,10 +20,15 @@ export class ClientesComponent implements OnInit {
   private page = 0;
   private size =  4;
   public paginador: any;
+  public esMostrarDetalle: boolean;
+  public clienteSeleccionado: ClienteModel;
+  private urlBase = `${environment.apiUrl}clientes/uploads/img`;
+
   constructor(private clientesService: ClientesService,
               private loaderService: NgxSpinnerService,
               private messageService: MessageService,
               private activatedRoute: ActivatedRoute,
+              private modalService: ModalService,
               private route: Router
     ) { }
 
@@ -31,6 +36,7 @@ export class ClientesComponent implements OnInit {
    // this.cargarClientes();
     // this.cargarClientesPaginado();
     this.recuperarPageRuta();
+    this.actualizarClienteSubscribe();
   }
 
   private recuperarPageRuta() {
@@ -42,6 +48,35 @@ export class ClientesComponent implements OnInit {
       }
     this.cargarClientesPaginado();
     });
+  }
+
+  private actualizarClienteSubscribe() {
+    this.modalService.getFNotificarUpload().subscribe((cliente: ClienteModel) => {
+      console.log("TCL: actualizarClienteSubscribe -> cliente", cliente)
+      if (cliente) {
+        this.listaCientes = this.listaCientes.map(clienteOriginal => {
+          if (clienteOriginal.id === cliente.id) {
+            clienteOriginal.foto = cliente.foto;
+          }
+          return clienteOriginal;
+        });
+      }
+    });
+  }
+
+  public obtenerRutaImagen(cliente: ClienteModel) {
+    return `${this.urlBase}/${cliente.foto}`;
+  }
+
+  public mostrarDetalle(cliente) {
+    this.clienteSeleccionado = cliente;
+    this.esMostrarDetalle = true;
+  }
+
+  public cerrarModalDetalle() {
+    this.clienteSeleccionado = null;
+    this.esMostrarDetalle = false;
+  //  this.cargarClientesPaginado();
   }
 
   private cargarClientes(): void {
@@ -119,7 +154,7 @@ export class ClientesComponent implements OnInit {
                MENSAJES_GENERALES.ELIMINADO_EXITOSO,
               'success'
             );
-        this.cargarClientes();
+        this.cargarClientesPaginado();
       },
       error: (err) => {
           console.log('err', err);

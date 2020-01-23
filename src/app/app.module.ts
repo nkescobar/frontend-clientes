@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CalendarModule} from 'primeng/calendar';
 import {InputTextModule} from 'primeng/inputtext';
+import {FileUploadModule} from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
@@ -21,6 +22,8 @@ import { NgxSpinnerModule } from "ngx-spinner";
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/es-CO';
 import { PaginatorComponent } from './components/paginator/paginator.component';
+import { DetalleClienteComponent } from './components/clientes/detalle-cliente/detalle-cliente.component';
+import {DialogModule} from 'primeng/dialog';
 
 registerLocaleData(localeFr, 'es-CO');
 
@@ -32,7 +35,8 @@ registerLocaleData(localeFr, 'es-CO');
     ClientesComponent,
     HomeComponent,
     CrearClientesComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    DetalleClienteComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +50,9 @@ registerLocaleData(localeFr, 'es-CO');
     ToastModule,
     MessageModule,
     MessagesModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    FileUploadModule,
+    DialogModule
   ],
   providers: [MessageService, {provide: LOCALE_ID, useValue: 'es-CO' }],
   bootstrap: [AppComponent]

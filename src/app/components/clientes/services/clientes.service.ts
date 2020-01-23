@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ClienteModel } from '../../../models/cliente';
-import { CLIENTES } from '../clientes.json';
 import { Observable, of, throwError} from 'rxjs';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpRequest, HttpEvent } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { catchError, tap, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -88,4 +87,17 @@ export class ClientesService {
     return this.http.delete<ModeloRespuestaModel>(`${this.urlBase}/${id}`, {headers: this.httpHeaders})
     .pipe(catchError( this.handleError));
   }
+
+  subirForo(archivo: File, id): Observable<HttpEvent<{}>> {
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    formData.append('id', id);
+
+    const req = new HttpRequest('POST', `${this.urlBase}/upload`, formData, {
+      reportProgress: true
+    });
+
+    return this.http.request(req);
+  }
+
 }

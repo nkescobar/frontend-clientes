@@ -1,0 +1,42 @@
+<div class="card">
+    <div class="card-header">
+        Detalle cliente
+    </div>
+    <div class="card-body">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <ul class="list-group text-dark mb-3" *ngIf="cliente">
+                        <li class="list-group-item active"> Nombre: {{cliente.nombre}} </li>
+                        <li class="list-group-item"> Apellido: {{cliente.apellido}} </li>
+                        <li class="list-group-item"> Email: {{cliente.email}} </li>
+                        <li class="list-group-item"> Fecha: {{cliente.createAt | date:"fullDate"}} </li>
+                    </ul>
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" (change)="seleccionarFoto($event)" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04">
+                            <label class="custom-file-label" for="inputGroupFile04">Buscar foto</label>
+                        </div>
+                        <div class="input-group-append">
+                            <button (click)="subirFoto()" class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Subir foto</button>
+                        </div>
+                    </div>
+                    <div *ngIf="progreso > 0" class="progress" style="height: 40px;">
+                        <div class="progress-bar progress-bar-striped" role="progressbar" [ngStyle]="{width: progreso+'%'}" aria-valuenow="10" attr.aria-valuemin="{{progreso}}" aria-valuemax="100">
+                            {{progreso}}%
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <img width="100%" *ngIf="cliente?.foto" [src]="obtenerRutaImagen()" alt="{{cliente.foto}}" class="img-thumbnail rounded">
+                    <img *ngIf="!cliente?.foto" src="assets/img/no_disponible.jpg" alt="imagen no disponible" class="img-thumbnail rounded">
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>

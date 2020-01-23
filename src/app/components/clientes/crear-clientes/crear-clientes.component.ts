@@ -44,6 +44,15 @@ export class CrearClientesComponent implements OnInit {
     });
   }
 
+  private cargarCliente(): void {
+    this.activatedRoute.params.subscribe(params => {
+      const id = params.id;
+      if (id) {
+      this.consultarCliente(id);
+      }
+    });
+  }
+
   private cargarDatosCliente() {
     const fecha = moment(this.cliente.createAt, 'YYYY-MM-DD').utc().toDate();
     const createAt = this.cliente.createAt ?
@@ -59,15 +68,6 @@ export class CrearClientesComponent implements OnInit {
   get getApellido() {return this.form.get('apellido'); }
   get getEmail() {return this.form.get('email'); }
   get getCreateAt() {return this.form.get('createAt'); }
-
-  private cargarCliente(): void {
-    this.activatedRoute.params.subscribe(params => {
-      const id = params.id;
-      if (id) {
-      this.consultarCliente(id);
-      }
-    });
-  }
 
   public almacenar() {
     this.form.markAllAsTouched();
