@@ -3,7 +3,7 @@
     <div class="card-body text-secondary">
         <h5 class="card-title">Listado de clientes</h5>
         <div class="my-2 text-left">
-            <button type="button" class="btn btn-rounded btn-primary" [routerLink]="['/clientes/form']">Crear cliente</button>
+            <button *ngIf="authService.hasRole('ROLE_ADMIN')" type="button" class="btn btn-rounded btn-primary" [routerLink]="['/clientes/form']">Crear cliente</button>
         </div>
         <div class="table-responsive">
             <table class="table table-bordered table-striped">
@@ -14,9 +14,9 @@
                         <th scope="col">APELLIDO</th>
                         <th scope="col">EMAIL</th>
                         <th scope="col">FECHA</th>
-                        <th scope="col">DETALLE</th>
-                        <th scope="col">EDITAR</th>
-                        <th scope="col">ELIMINAR</th>
+                        <th scope="col" *ngIf="authService.hasRole('ROLE_ADMIN') || authService.hasRole('ROLE_USER') ">DETALLE</th>
+                        <th scope="col" *ngIf="authService.hasRole('ROLE_ADMIN')"> EDITAR</th>
+                        <th scope="col" *ngIf="authService.hasRole('ROLE_ADMIN')">ELIMINAR</th>
 
                     </tr>
                 </thead>
@@ -32,10 +32,10 @@
                         <td>{{cliente.createAt | date:"EEEE dd, MM yyyy" }}</td>
                         <td>
                             <!--[routerLink]="['/clientes/detalle/',cliente.id]"-->
-                            <button type="button" name="button" class="btn btn-success" (click)="mostrarDetalle(cliente)">Detalle</button> </td>
+                            <button *ngIf="authService.hasRole('ROLE_ADMIN') || authService.hasRole('ROLE_USER') " type="button" name="button" class="btn btn-success" (click)="mostrarDetalle(cliente)">Detalle</button> </td>
 
-                        <td> <button type="button" name="button" class="btn btn-primary" [routerLink]="['/clientes/form/',cliente.id]">Editar</button> </td>
-                        <td> <button type="button" name="eliminar" class="btn btn-danger" (click)="eliminarCliente(cliente)">Eliminar</button> </td>
+                        <td *ngIf="authService.hasRole('ROLE_ADMIN')"> <button type="button" name="button" class="btn btn-primary" [routerLink]="['/clientes/form/',cliente.id]">Editar</button> </td>
+                        <td *ngIf="authService.hasRole('ROLE_ADMIN')"> <button type="button" name="eliminar" class="btn btn-danger" (click)="eliminarCliente(cliente)">Eliminar</button> </td>
 
                     </tr>
                 </tbody>

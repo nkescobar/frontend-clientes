@@ -12,8 +12,10 @@
                         <li class="list-group-item"> Apellido: {{cliente.apellido}} </li>
                         <li class="list-group-item"> Email: {{cliente.email}} </li>
                         <li class="list-group-item"> Fecha: {{cliente.createAt | date:"fullDate"}} </li>
+                        <li class="list-group-item"> Region: {{cliente.region.nombre}} </li>
+
                     </ul>
-                    <div class="input-group mb-3">
+                    <div *ngIf="authService.hasRole('ROLE_ADMIN')" class="input-group mb-3">
                         <div class="custom-file">
                             <input type="file" (change)="seleccionarFoto($event)" class="custom-file-input" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04">
                             <label class="custom-file-label" for="inputGroupFile04">Buscar foto</label>

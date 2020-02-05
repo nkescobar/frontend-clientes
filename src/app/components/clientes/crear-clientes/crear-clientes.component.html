@@ -58,6 +58,17 @@
                         <label>Fecha creación</label>
                       </span>
                 </div>
+                <div class="col-lg-6 col-md-12 col-sm-12 espacio">
+                    <span class="ui-float-label">
+                        <p-dropdown [options]="listaRegiones" formControlName="region" placeholder="Región"  optionLabel="nombre" [style]="{'width':'100%'}" [autoDisplayFirst]="false"></p-dropdown>
+                        <div *ngIf="getRegion.invalid && (getRegion.dirty || getRegion.touched)"
+                        class="alert alert-danger">
+                          <div *ngIf="getRegion.hasError('required')">
+                           {{erroresDefs.region.required}}
+                          </div>
+                        </div>
+                      </span>
+                </div>
             </div>
             <div class="row ui-fluid">
                 <div class="col-12 align-right espacio">

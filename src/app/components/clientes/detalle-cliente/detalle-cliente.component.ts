@@ -10,6 +10,7 @@ import { MENSAJES_GENERALES } from 'src/app/constants/validators';
 import { environment } from 'src/environments/environment';
 import { HttpEventType } from '@angular/common/http';
 import { ModalService } from '../services/modal.service';
+import { AuthService } from '../../usuarios/services/auth.service';
 
 @Component({
   selector: 'app-detalle-cliente',
@@ -28,7 +29,8 @@ export class DetalleClienteComponent implements OnInit {
               private loaderService: NgxSpinnerService,
               private router: Router,
               private activatedRoute: ActivatedRoute,
-              private modalService: ModalService
+              private modalService: ModalService,
+              public authService: AuthService
 ) { }
 
   ngOnInit() {

@@ -7,7 +7,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ClientesComponent } from './components/clientes/clientes.component';
 import { HomeComponent } from './components/home/home.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CrearClientesComponent } from './components/clientes/crear-clientes/crear-clientes.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -24,6 +24,12 @@ import localeFr from '@angular/common/locales/es-CO';
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { DetalleClienteComponent } from './components/clientes/detalle-cliente/detalle-cliente.component';
 import {DialogModule} from 'primeng/dialog';
+import {DropdownModule} from 'primeng/dropdown';
+import { LoginComponent } from './components/usuarios/login/login.component';
+import { ClientesService } from './components/clientes/services/clientes.service';
+import { ContentTypeInterceptor } from './interceptors/content-type';
+import { JwtInterceptor } from './interceptors/jwt-interceptor';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 registerLocaleData(localeFr, 'es-CO');
 
@@ -36,7 +42,8 @@ registerLocaleData(localeFr, 'es-CO');
     HomeComponent,
     CrearClientesComponent,
     PaginatorComponent,
-    DetalleClienteComponent
+    DetalleClienteComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -52,9 +59,16 @@ registerLocaleData(localeFr, 'es-CO');
     MessagesModule,
     NgxSpinnerModule,
     FileUploadModule,
-    DialogModule
+    DialogModule,
+    DropdownModule
   ],
-  providers: [MessageService, {provide: LOCALE_ID, useValue: 'es-CO' }],
+  providers: [MessageService,
+    {provide: LOCALE_ID, useValue: 'es-CO' },
+    ClientesService,
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

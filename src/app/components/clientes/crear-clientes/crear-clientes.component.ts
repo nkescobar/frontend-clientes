@@ -8,6 +8,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
 import Swal from 'sweetalert2';
+import { RegionModel } from '../../../models/region';
 
 @Component({
   selector: 'app-crear-clientes',
@@ -21,6 +22,7 @@ export class CrearClientesComponent implements OnInit {
   public cliente: ClienteModel;
   public esModoEditar: boolean;
   public errores: string[] = [];
+  public listaRegiones: RegionModel[] = [];
   constructor(private fb: FormBuilder,
               private clientesService: ClientesService,
               private messageService: MessageService,
@@ -33,6 +35,7 @@ export class CrearClientesComponent implements OnInit {
     this.titulo = 'Crear Cliente';
     this.inicializarFormulario();
     this.cargarCliente();
+    this.cargarListaRegiones();
   }
 
   private inicializarFormulario(): void {
@@ -40,7 +43,9 @@ export class CrearClientesComponent implements OnInit {
       nombre: [null, [Validators.required]],
       apellido: [null, [Validators.required]],
       email: [null, [Validators.email]],
-      createAt: [null]
+      createAt: [null],
+      region: [null]
+
     });
   }
 
@@ -49,6 +54,26 @@ export class CrearClientesComponent implements OnInit {
       const id = params.id;
       if (id) {
       this.consultarCliente(id);
+      }
+    });
+  }
+
+  private cargarListaRegiones() {
+    this.loaderService.show();
+    this.clientesService.getRegiones().subscribe({
+      next: (response) => {
+          if (response) {
+
+            this.listaRegiones = response;
+            console.log("TCL: CrearClientesComponent -> cargarListaRegiones -> this.listaRegiones ", this.listaRegiones )
+          }
+      },
+      error: (err) => {
+          console.log('err', err);
+          this.messageService.add({severity: 'error', summary: 'Información', detail: MENSAJES_GENERALES.ERROR_PETICION});
+      },
+      complete: () => {
+        this.loaderService.hide();
       }
     });
   }
@@ -62,12 +87,14 @@ export class CrearClientesComponent implements OnInit {
     this.getApellido.setValue(this.cliente.apellido);
     this.getEmail.setValue(this.cliente.email);
     this.getCreateAt.setValue(createAt);
+    this.getRegion.setValue(this.cliente.region);
   }
 
   get getNombre() {return this.form.get('nombre'); }
   get getApellido() {return this.form.get('apellido'); }
   get getEmail() {return this.form.get('email'); }
   get getCreateAt() {return this.form.get('createAt'); }
+  get getRegion() {return this.form.get('region'); }
 
   public almacenar() {
     this.form.markAllAsTouched();
@@ -87,7 +114,7 @@ export class CrearClientesComponent implements OnInit {
   }
 
   private consultarCliente(id) {
-    this.loaderService.hide();
+    this.loaderService.show();
     this.clientesService.getCliente(id).subscribe({
       next: (response) => {
           if (response) {
@@ -168,6 +195,8 @@ export class CrearClientesComponent implements OnInit {
     cliente.email = this.getEmail.value;
     const dateFormat = moment(this.getCreateAt.value).format('YYYY-MM-DD');
     cliente.createAt = dateFormat;
+    cliente.region = this.getRegion.value;
+    console.log("TCL: CrearClientesComponent -> getgetRegion -> cliente", cliente)
     return cliente;
   }
 
@@ -179,6 +208,7 @@ export class CrearClientesComponent implements OnInit {
     cliente.email = this.getEmail.value;
     const dateFormat = moment(this.getCreateAt.value).format('YYYY-MM-DD');
     cliente.createAt = dateFormat;
+    cliente.region = this.getRegion.value;
     console.log("TCL: CrearClientesComponent -> getgetCreateAt -> cliente.createAt", cliente.createAt)
     return cliente;
   }

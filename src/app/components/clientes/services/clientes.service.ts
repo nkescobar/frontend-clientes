@@ -7,6 +7,8 @@ import { catchError, tap, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ModeloRespuestaModel } from 'src/app/models/respuesta';
 import Swal from 'sweetalert2';
+import { RegionModel } from '../../../models/region';
+import { AuthService } from '../../usuarios/services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,25 +16,34 @@ import Swal from 'sweetalert2';
 export class ClientesService {
   private urlBase = `${environment.apiUrl}clientes`;
   private httpHeaders = new HttpHeaders({'Content-Type': 'application/json'});
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient) { }
+
+/*
+  private agregarAuthorizathionHeader() {
+    const token = this.authService.token;
+    if (token) {
+      return this.httpHeaders.append('Authorization', `Bearer ${token}`);
+    }
+    return this.httpHeaders;
+  }*/
 
   private handleError(error: HttpErrorResponse) {
-    console.log("TCL: ClientesService -> handleError -> error", error)
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.log('Ocurrio un error:', error.error.message);
     } else {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
-        console.log( `Backend code ${error.status}, ` + `Cuerpo del mensaje: ${error.error}`)
-        if (error.status === 400) {
+      console.log( `Backend code ${error.status}, ` + `Cuerpo del mensaje: ${error.error}`);
+      if (error.status === 400) {
           return throwError(error);
-        }
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: error.error.mensaje,
-          });
+      }
+
+      Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.error.mensaje,
+        });
 
     }
     // return an observable with a user-facing error message
@@ -41,10 +52,16 @@ export class ClientesService {
     );
   }
 
+
   getClientes(): Observable<ClienteModel[]> {
     // return of(CLIENTES);
     return this.http.get<ClienteModel[]>(this.urlBase);
   }
+
+  getRegiones(): Observable<RegionModel[]> {
+    return this.http.get<RegionModel[]>(`${this.urlBase}/regiones`)
+  }
+
 
   getClientesPaginado(page: number , size: number): Observable<any> {
     // return of(CLIENTES);
@@ -69,32 +86,34 @@ export class ClientesService {
 
   crearCliente(cliente: ClienteModel): Observable<ModeloRespuestaModel> {
     // return of(CLIENTES);
-    return this.http.post<ModeloRespuestaModel>(this.urlBase, cliente, {headers: this.httpHeaders})
-    .pipe(catchError( this.handleError));
+    return this.http.post<ModeloRespuestaModel>(this.urlBase, cliente)
+    .pipe(catchError( err => this.handleError(err)));
   }
 
   getCliente(id): Observable<ModeloRespuestaModel> {
+    // , {headers: this.agregarAuthorizathionHeader()}
     return this.http.get<ModeloRespuestaModel>(`${this.urlBase}/${id}`)
-    .pipe(catchError( this.handleError));
+    .pipe(catchError( err => this.handleError(err)));
     }
 
   actualizarCliente(cliente: ClienteModel): Observable<ModeloRespuestaModel> {
-    return this.http.put<ModeloRespuestaModel>(`${this.urlBase}/${cliente.id}`, cliente, {headers: this.httpHeaders})
-    .pipe(catchError( this.handleError));
+    return this.http.put<ModeloRespuestaModel>(`${this.urlBase}/${cliente.id}`, cliente)
+    .pipe(catchError( err => this.handleError(err)));
   }
 
   eliminarCliente(id: number): Observable<ModeloRespuestaModel> {
-    return this.http.delete<ModeloRespuestaModel>(`${this.urlBase}/${id}`, {headers: this.httpHeaders})
-    .pipe(catchError( this.handleError));
+
+
+    return this.http.delete<ModeloRespuestaModel>(`${this.urlBase}/${id}`)
+    .pipe(catchError(err => this.handleError(err)));
   }
 
   subirForo(archivo: File, id): Observable<HttpEvent<{}>> {
     const formData = new FormData();
     formData.append('archivo', archivo);
     formData.append('id', id);
-
     const req = new HttpRequest('POST', `${this.urlBase}/upload`, formData, {
-      reportProgress: true
+      reportProgress: true,
     });
 
     return this.http.request(req);

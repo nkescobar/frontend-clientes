@@ -8,6 +8,7 @@ import { MENSAJES_GENERALES } from 'src/app/constants/validators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ModalService } from './services/modal.service';
+import { AuthService } from '../usuarios/services/auth.service';
 
 @Component({
   selector: 'app-clientes',
@@ -29,7 +30,8 @@ export class ClientesComponent implements OnInit {
               private messageService: MessageService,
               private activatedRoute: ActivatedRoute,
               private modalService: ModalService,
-              private route: Router
+              private route: Router,
+              public authService: AuthService
     ) { }
 
   ngOnInit() {

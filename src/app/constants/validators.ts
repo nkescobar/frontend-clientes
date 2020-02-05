@@ -9,6 +9,18 @@ export const ERRORES_REGISTRAR_CLIENTE = {
     },
     email: {
         email: 'Formato erroneo.'
+    },
+    region: {
+        required: CAMPO_REQUERIDO
+    },
+};
+
+export const ERRORES_LOGIN = {
+    username: {
+        required: CAMPO_REQUERIDO
+    },
+    password: {
+        required: CAMPO_REQUERIDO
     }
 };
 
